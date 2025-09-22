@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angkringan Bahari - Dashboard Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #FFD700;
+            --dark-color: #2F1B14;
+            --light-bg: #FFF8DC;
+            --cart-badge-bg: #FF6B6B;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-color);
+            padding-top: 80px;
+        }
+
+        /* Fixed Cart Bar */
+        .cart-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary-color), #A0522D);
+            color: white;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--cart-badge-bg);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .cart-summary {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Header Styles */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), #A0522D);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .restaurant-logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Menu Category Styles */
+        .category-card {
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Menu Item Styles */
+        .menu-item {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .menu-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .menu-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .menu-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .menu-details {
+            flex: 1;
+        }
+
+        .menu-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-price {
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .add-to-cart-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .add-to-cart-btn:hover {
+            transform: scale(1.1);
+            background-color: #FFC700;
+        }
+
+        /* Table Section */
+        .table-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .table-card {
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: var(--light-bg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .table-card:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .table-card.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-price {
+            color: var(--secondary-color);
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            border-color: var(--secondary-color);
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-container {
+                padding: 0 10px;
+            }
+            
+            .cart-summary {
+                gap: 10px;
+            }
+            
+            .cart-total {
+                font-size: 0.9rem;
+            }
+            
+            .menu-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .menu-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .category-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .cart-badge-animate {
+            animation: bounce 0.3s ease;
+        }
+
+        .menu-icon-badge {
+            position: relative;
+        }
+
+        .menu-icon-badge::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 15px;
+            height: 15px;
+            background-color: var(--cart-badge-bg);
+            border-radius: 50%;
+            display: none;
+        }
+
+        .menu-item:hover .menu-icon-badge::after {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Cart Bar -->
+    <div class="cart-bar">
+        <div class="cart-container">
+            <div class="cart-info">
+                <span>Meja: <span id="currentTable" class="fw-bold">-</span></span>
+            </div>
+            <div class="cart-icon" onclick="showCartModal()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+            <div class="cart-summary">
+                <span class="cart-total">Total: <span id="cartTotal">Rp 0</span></span>
+                <button class="btn btn-warning btn-sm" onclick="showOrderModal()">
+                    <i class="fas fa-check"></i> Pesan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <header class="header-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center">
+                    <div class="restaurant-logo">
+                        <i class="fas fa-ship"></i>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <h1 class="display-4 mb-2">Angkringan Bahari</h1>
+                    <p class="lead mb-0">
+                        <i class="fas fa-map-marker-alt"></i> Simpang 5 Semarang
+                        <span class="mx-3">|</span>
+                        <i class="fas fa-clock"></i> Buka 24 Jam
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Table Selection -->
+        <div class="table-section fade-in">
+            <h2 class="mb-4">
+                <i class="fas fa-table"></i> Pilih Meja Anda
+            </h2>
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="table-card text-center" onclick="selectTable(1)">
+                        <h4>Meja 1</h4>
+                        <p class="mb-0">Kapasitas 4 orang</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="table-card text-center" onclick="selectTable(2)">
+                        <h4>Meja 2</h4>
+                        <p class="mb-0">Kapasitas 4 orang</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="table-card text-center" onclick="selectTable(3)">
+                        <h4>Meja 3</h4>
+                        <p class="mb-0">Kapasitas 6 orang</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="table-card text-center" onclick="selectTable(4)">
+                        <h4>Meja 4</h4>
+                        <p class="mb-0">Kapasitas 8 orang</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Categories -->
+        <div class="row mt-5">
+            <!-- Makanan Utama -->
+            <div class="col-lg-6">
+                <div class="category-card fade-in">
+                    <div class="text-center">
+                        <i class="fas fa-utensils category-icon"></i>
+                        <h3 class="mb-4">Makanan Utama</h3>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-drumstick-bite"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Sate Ayam Madura</h5>
+                            <p class="menu-description">Tender ayam dengan bumbu khas Madura</p>
+                            <p class="menu-price">Rp 25.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Sate Ayam Madura', 25000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-fish"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Pecel Lele</h5>
+                            <p class="menu-description">Lele goreng krispi dengan lalapan segar</p>
+                            <p class="menu-price">Rp 20.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Pecel Lele', 20000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Rujak Cingur</h5>
+                            <p class="menu-description">Salad buah dengan bumbu khas Jawa</p>
+                            <p class="menu-price">Rp 18.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Rujak Cingur', 18000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Minuman -->
+            <div class="col-lg-6">
+                <div class="category-card fade-in" style="animation-delay: 0.2s">
+                    <div class="text-center">
+                        <i class="fas fa-glass-water category-icon"></i>
+                        <h3 class="mb-4">Minuman Segar</h3>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Es Teh Manis</h5>
+                            <p class="menu-description">Teh pilihan dengan gula aren</p>
+                            <p class="menu-price">Rp 8.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Es Teh Manis', 8000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-cocktail"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Es Dawet Ayu</h5>
+                            <p class="menu-description">Susu kelapa dengan sirup merah</p>
+                            <p class="menu-price">Rp 12.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Es Dawet Ayu', 12000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-wine-bottle"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Es Kelapa Muda</h5>
+                            <p class="menu-description">Kelapa segar dengan es batu</p>
+                            <p class="menu-price">Rp 15.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Es Kelapa Muda', 15000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snacks -->
+            <div class="col-lg-6 mt-4">
+                <div class="category-card fade-in" style="animation-delay: 0.4s">
+                    <div class="text-center">
+                        <i class="fas fa-cookie category-icon"></i>
+                        <h3 class="mb-4">Camilan</h3>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-bread-slice"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Risoles Mayo</h5>
+                            <p class="menu-description">Uris dengan isian daging mayones</p>
+                            <p class="menu-price">Rp 10.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Risoles Mayo', 10000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Tempe Mendoan</h5>
+                            <p class="menu-description">Tempe tipis goreng renyah</p>
+                            <p class="menu-price">Rp 8.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Tempe Mendoan', 8000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-carrot"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Bakwan Sayur</h5>
+                            <p class="menu-description">Sayuran goreng khas Indonesia</p>
+                            <p class="menu-price">Rp 12.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Bakwan Sayur', 12000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Menu -->
+            <div class="col-lg-6 mt-4">
+                <div class="category-card fade-in" style="animation-delay: 0.6s">
+                    <div class="text-center">
+                        <i class="fas fa-star category-icon"></i>
+                        <h3 class="mb-4">Menu Spesial</h3>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Gudeg Ngliling</h5>
+                            <p class="menu-description">Gudeg khas Yogyakarta dengan krecek</p>
+                            <p class="menu-price">Rp 35.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Gudeg Ngliling', 35000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-bowl-rice"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Rawon Setan</h5>
+                            <p class="menu-description">Rawon pedas dengan daging sapi</p>
+                            <p class="menu-price">Rp 30.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Rawon Setan', 30000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="menu-details">
+                            <h5 class="menu-name">Soto Semarang</h5>
+                            <p class="menu-description">Soto dengan emping dan telur puyuh</p>
+                            <p class="menu-price">Rp 25.000</p>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Soto Semarang', 25000)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-shopping-cart"></i> Keranjang Belanja
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body cart-modal">
+                    <div id="cartItems">
+                        <div class="cart-empty">
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                            <p>Keranjang masih kosong</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="showOrderModal()">
+                        <i class="fas fa-check"></i> Pesan Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p class="mb-2">Meja: <span id="selectedTableModal" class="fw-bold"></span></p>
+                        <p class="mb-2">Total Item: <span id="totalItemsModal" class="fw-bold"></span></p>
+                        <p class="mb-3">Total Harga: <span id="totalPriceModal" class="fw-bold text-warning"></span></p>
+                    </div>
+                    <div id="orderSummary">
+                        <h6>Detail Pesanan:</h6>
+                        <div id="orderItemsList"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="submitOrder()">
+                        <i class="fas fa-paper-plane"></i> Kirim Pesanan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedTableNumber = null;
+        let cart = [];
+
+        function selectTable(tableNumber) {
+            selectedTableNumber = tableNumber;
+            
+            // Update table card styles
+            document.querySelectorAll('.table-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.table-card').classList.add('active');
+            
+            // Update cart bar
+            document.getElementById('currentTable').textContent = `Meja ${tableNumber}`;
+        }
+
+        function addToCart(name, price) {
+            if (!selectedTableNumber) {
+                alert('Silakan pilih meja terlebih dahulu!');
+                return;
+            }
+            
+            // Find item in cart
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCartDisplay();
+            showNotification(`${name} ditambahkan ke keranjang`);
+        }
+
+        function updateCartDisplay() {
+            // Update cart badge
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartBadge').textContent = totalItems;
+            
+            // Animate badge if items added
+            if (totalItems > 0) {
+                document.getElementById('cartBadge').classList.add('cart-badge-animate');
+                setTimeout(() => {
+                    document.getElementById('cartBadge').classList.remove('cart-badge-animate');
+                }, 300);
+            }
+            
+            // Update cart total
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cartTotal').textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+            
+            // Update cart modal
+            const cartItemsDiv = document.getElementById('cartItems');
+            if (cart.length > 0) {
+                cartItemsDiv.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="mx-2">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="quantity-btn ms-2" onclick="removeFromCart(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                cartItemsDiv.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                        <p>Keranjang masih kosong</p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            
+            updateCartDisplay();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        function showCartModal() {
+            if (!selectedTableNumber) {
+                alert('Silakan pilih meja terlebih dahulu!');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('cartModal'));
+            modal.show();
+        }
+
+        function showOrderModal() {
+            if (!selectedTableNumber) {
+                alert('Silakan pilih meja terlebih dahulu!');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Keranjang masih kosong!');
+                return;
+            }
+            
+            // Update order summary
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            document.getElementById('selectedTableModal').textContent = `Meja ${selectedTableNumber}`;
+            document.getElementById('totalItemsModal').textContent = `${totalItems} item`;
+            document.getElementById('totalPriceModal').textContent = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+            
+            document.getElementById('orderItemsList').innerHTML = cart.map(item => `
+                <div class="d-flex justify-content-between mb-2">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                </div>
+            `).join('');
+            
+            const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+            modal.show();
+        }
+
+        function submitOrder() {
+            if (cart.length === 0) {
+                alert('Keranjang masih kosong!');
+                return;
+            }
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            alert(`Pesanan Anda untuk Meja ${selectedTableNumber} telah diterima!\n\nTotal Item: ${totalItems}\nTotal Harga: Rp ${totalPrice.toLocaleString('id-ID')}\n\nTerima kasih telah memesan di Angkringan Bahari!`);
+            
+            // Clear cart
+            cart = [];
+            updateCartDisplay();
+            
+            // Close modals
+            bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide();
+            bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();
+        }
+
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-5 bg-success text-white px-4 py-2 rounded shadow';
+            notification.style.zIndex = '9999';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
